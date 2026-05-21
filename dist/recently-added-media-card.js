@@ -233,6 +233,12 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         </div>
         <span class="helper">When enabled, scales down the layout on narrow screens.</span>
 
+        <div class="toggle-row">
+          <span>Poster Shimmer Animation</span>
+          <input type="checkbox" id="show_shimmer" ${cfg.show_shimmer ? 'checked' : ''}>
+        </div>
+        <span class="helper">Adds a glossy sweep animation across poster art. Off by default to avoid GPU flash on tablets.</span>
+
         <div class="section-title">Trailers</div>
         <div class="field-row">
           <label>TMDB API Key (for trailers)</label>
@@ -278,7 +284,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
       'emby_url', 'emby_api_key', 'emby_user_id',
       'movies_count', 'shows_count', 'cycle_interval', 'title',
       'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
-      'mobile_mode',
+      'mobile_mode', 'show_shimmer',
     ];
 
     fields.forEach(id => {
@@ -360,6 +366,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       cycle_interval: config.cycle_interval || 8,
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
+      show_shimmer: config.show_shimmer || false,
       ...config,
     };
 
@@ -410,6 +417,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       title: 'Recently Added',
       theme: 'auto',
       fill_height: true,
+      show_shimmer: false,
     };
   }
 
@@ -1854,7 +1862,17 @@ class RecentlyAddedMediaCard extends HTMLElement {
         }
 
         .poster-shimmer {
-          display: none;
+          ${cfg.show_shimmer ? `
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+          animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }` : 'display: none;'}
         }
 
         /* Info */
