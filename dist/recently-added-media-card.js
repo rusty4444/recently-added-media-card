@@ -227,6 +227,12 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
           <span class="helper">Default: 300</span>
         </div>
 
+        <div class="toggle-row">
+          <span>Mobile Scaling (for phone screens)</span>
+          <input type="checkbox" id="mobile_mode" ${cfg.mobile_mode ? 'checked' : ''}>
+        </div>
+        <span class="helper">When enabled, scales down the layout on narrow screens.</span>
+
         <div class="section-title">Trailers</div>
         <div class="field-row">
           <label>TMDB API Key (for trailers)</label>
@@ -272,6 +278,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
       'emby_url', 'emby_api_key', 'emby_user_id',
       'movies_count', 'shows_count', 'cycle_interval', 'title',
       'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
+      'mobile_mode',
     ];
 
     fields.forEach(id => {
@@ -371,6 +378,13 @@ class RecentlyAddedMediaCard extends HTMLElement {
       this.style.setProperty('--card-fixed-height', h);
     } else {
       this.classList.remove('fixed-height');
+    }
+
+    // Apply mobile-scaling class if enabled
+    if (this._config.mobile_mode) {
+      this.classList.add('mobile-scaling');
+    } else {
+      this.classList.remove('mobile-scaling');
     }
 
     this._render();
@@ -2055,6 +2069,62 @@ class RecentlyAddedMediaCard extends HTMLElement {
           width: 100%;
           height: 100%;
           border: none;
+        }
+
+        /* Mobile scaling — applied via :host(.mobile-scaling) with media query */
+        @media (max-width: 520px) {
+        :host(.mobile-scaling) .main {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+        :host(.mobile-scaling) .poster-wrap {
+          height: auto;
+          width: 40%;
+          max-width: 140px;
+        }
+        :host(.mobile-scaling) .content {
+          padding: 12px;
+        }
+        :host(.mobile-scaling) .item-title {
+          font-size: 18px;
+          -webkit-line-clamp: 1;
+        }
+        :host(.mobile-scaling) .item-subtitle {
+          font-size: 13px;
+        }
+        :host(.mobile-scaling) .item-summary {
+          font-size: 13px;
+          -webkit-line-clamp: 3;
+        }
+        :host(.mobile-scaling) .item-type {
+          font-size: 11px;
+          padding: 3px 8px;
+        }
+        :host(.mobile-scaling) .header {
+          margin-bottom: 8px;
+        }
+        :host(.mobile-scaling) .header-title {
+          font-size: 12px;
+        }
+        :host(.mobile-scaling) .dots {
+          padding-top: 8px;
+        }
+        :host(.mobile-scaling) .info {
+          gap: 4px;
+        }
+        :host(.mobile-scaling) .trailer-btn {
+          padding: 4px 8px;
+          font-size: 11px;
+          min-width: auto;
+          min-height: auto;
+        }
+        :host(.mobile-scaling) .item-rating {
+          font-size: 13px;
+        }
+        :host(.mobile-scaling) .time-ago {
+          font-size: 12px;
+        }
         }
 
         /* Error */
