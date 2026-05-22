@@ -572,6 +572,9 @@ class RecentlyAddedMediaCard extends HTMLElement {
         errEl.textContent = `Could not connect to ${serverType}: ${err.message}`;
         errEl.style.display = 'block';
       }
+      this._items = [];
+      this._currentIndex = 0;
+      this._updateDisplay();
     }
   }
 
@@ -1012,7 +1015,37 @@ class RecentlyAddedMediaCard extends HTMLElement {
   // ── Display update ────────────────────────────────────────────────────────────
 
   _updateDisplay() {
-    if (!this._items.length) return;
+    if (!this._items.length) {
+      const cfg = this._config || {};
+      const theme = this._getTheme();
+      const primaryRgb = this._hexToRgb(theme.primary);
+      const root = this.shadowRoot;
+      const bgEl = root.querySelector('.bg-art');
+      if (bgEl) bgEl.style.backgroundImage = '';
+      const bgNew = root.querySelector('.bg-art-next');
+      if (bgNew) { bgNew.classList.remove('active'); bgNew.style.backgroundImage = ''; }
+      const posterEl = root.querySelector('.poster');
+      if (posterEl) { posterEl.src = ''; posterEl.style.opacity = '0.3'; }
+      const titleEl = root.querySelector('.item-title');
+      if (titleEl) titleEl.textContent = '';
+      const subtitleEl = root.querySelector('.item-subtitle');
+      if (subtitleEl) subtitleEl.textContent = `No recently added items available from ${cfg.server_type || 'plex'}. Configure your server URL and token, or check the connection.`;
+      const typeEl = root.querySelector('.item-type');
+      if (typeEl) { typeEl.textContent = 'No items'; typeEl.className = 'item-type movie'; }
+      const ratingEl = root.querySelector('.item-rating');
+      if (ratingEl) ratingEl.style.display = 'none';
+      const summaryEl = root.querySelector('.item-summary');
+      if (summaryEl) summaryEl.textContent = '';
+      const dotsEl = root.querySelector('.dots');
+      if (dotsEl) dotsEl.innerHTML = '';
+      const counterEl = root.querySelector('.counter');
+      if (counterEl) counterEl.textContent = '';
+      const timeEl = root.querySelector('.time-ago');
+      if (timeEl) timeEl.textContent = '';
+      const trailerBtn = root.querySelector('.trailer-btn');
+      if (trailerBtn) { trailerBtn.classList.remove('visible'); trailerBtn.onclick = null; }
+      return;
+    }
     const item = this._items[this._currentIndex];
     const root = this.shadowRoot;
 
