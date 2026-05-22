@@ -155,13 +155,14 @@ tmdb_api_key: YOUR_TMDB_READ_ACCESS_TOKEN
 | `emby_user_id` | string | — | Emby user ID |
 | `movies_count` | number | `5` | Number of recently added movies to display |
 | `shows_count` | number | `5` | Number of recently added TV shows to display |
-| `cycle_interval` | number | `8` | Seconds between cycling to the next item |
-| `title` | string | `"Recently Added"` | Header text (set to empty string to hide) |
-| `theme` | string | `"auto"` | Colour theme: `auto`, `plex`, `kodi`, `jellyfin`, `emby`, `dark`, `midnight`, `sunset`, `forest` |
-| `tmdb_api_key` | string | — | TMDB Read Access Token — enables the trailer button |
-| `trailer_mode` | string | `"inline"` | `inline` (plays on top of the card) or `popup` (fullscreen overlay) |
-| `fill_height` | boolean | `true` | When enabled, card stretches to fill its container. Disable if the card appears collapsed |
-| `card_height` | number | `300` | Card height in pixels (only used when `fill_height` is `false`) |
+|| `cycle_interval` | number | `8` | Seconds between cycling to the next item |
+|| `title` | string | `"Recently Added"` | Header text (set to empty string to hide) |
+|| `theme` | string | `"auto"` | Colour theme: `auto`, `plex`, `kodi`, `jellyfin`, `emby`, `dark`, `midnight`, `sunset`, `forest` |
+|| `tmdb_api_key` | string | — | TMDB Read Access Token — enables the trailer button |
+|| `trailer_mode` | string | `"inline"` | `inline` (plays on top of the card) or `popup` (fullscreen overlay) |
+|| `mobile_mode` | boolean | `false` | When enabled, adapts the layout for narrow screens (<520px) — stacks poster above info, reduces font sizes and padding |
+|| `fill_height` | boolean | `true` | When enabled, card stretches to fill its container. Disable if the card appears collapsed |
+|| `card_height` | number | `300` | Card height in pixels (only used when `fill_height` is `false`) |
 
 ---
 
