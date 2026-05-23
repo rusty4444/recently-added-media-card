@@ -1752,6 +1752,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
         :host {
           display: block;
           height: 100%;
+          min-height: var(--card-fixed-height, 300px);
           --accent-primary: ${theme.primary};
           --accent-secondary: ${theme.secondary};
           --accent-primary-rgb: ${primaryRgb};
@@ -1765,6 +1766,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
 
         ha-card {
           height: 100%;
+          min-height: var(--card-fixed-height, 300px);
           box-sizing: border-box;
           position: relative;
           background: var(--card-bg) !important;
@@ -1796,6 +1798,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
           left: 0;
           right: 0;
           bottom: 0;
+          min-height: var(--card-fixed-height, 300px);
           background: var(--card-bg);
           overflow: hidden;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
