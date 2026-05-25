@@ -1,7 +1,1 @@
-{
-  "name": "Recently Added Media Card",
-  "render_readme": true,
-  "filename": "recently-added-media-card.js",
-  "icon": "images/logo.png",
-  "logo": "images/logo.png"
-}
+{ "name": "Recently Added Media Card", "render_readme": true, "filename": "recently-added-media-card.js" }
