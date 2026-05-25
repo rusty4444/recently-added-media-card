@@ -1,6 +1,10 @@
 # Recently Added Media Card
 
 <p align="center">
+  <img src="images/logo.png" alt="Recently Added Media Card" width="600">
+</p>
+
+<p align="center">
   <a href="https://buymeacoffee.com/rusty4" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="50">
   </a>
@@ -11,7 +15,7 @@
 A cinematic Home Assistant card that displays recently added movies and TV shows from **Plex**, **Kodi**, **Jellyfin**, or **Emby** — all in one card.
 
 <p align="center">
-  <img src="screenshots/recently-added-card.gif" alt="Recently Added Media Card" width="600">
+  <img src="screenshots/recently-added-card.gif" alt="Recently Added Media Card Demo" width="600">
 </p>
 
 > **v2.0.0** — This card unifies and replaces the previous standalone cards ([plex-recently-added-card](https://github.com/rusty4444/plex-recently-added-card), [kodi-recently-added-card](https://github.com/rusty4444/kodi-recently-added-card), [jellyfin-recently-added-card](https://github.com/rusty4444/jellyfin-recently-added-card), [emby-recently-added-card](https://github.com/rusty4444/emby-recently-added-card)) into a single card with a server type selector, themed accents, inline trailer playback, and swipe navigation.
