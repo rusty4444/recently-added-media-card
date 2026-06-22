@@ -56,12 +56,9 @@ The editor dynamically shows the right config fields based on your server type:
 
 ## Install via HACS (Recommended)
 
-1. Open **HACS** in Home Assistant
-2. Click the **three dots** menu (top right) → **Custom repositories**
-3. Paste `https://github.com/rusty4444/recently-added-media-card` and select **Dashboard** as the category
-4. Click **Add**
-5. Search for **Recently Added Media Card** in HACS → **Download**
-6. Refresh your browser (Ctrl+Shift+R)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rusty4444&repository=recently-added-media-card&category=dashboard)
+
+Or search for **Recently Added Media Card** in HACS → **Download**.
 
 ## Install Manually
 
