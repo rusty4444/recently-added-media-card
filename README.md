@@ -232,6 +232,7 @@ Items are interleaved (movie, show, movie, show...) and displayed in a cycling c
 - The card makes API calls **from the browser**, not from the HA server. Your media server URL must be reachable from the device viewing the dashboard.
 - If HA is served over **HTTPS** and your media server is on plain **HTTP**, browsers will block the requests (mixed content). Either access both over HTTPS, or use Plex's built-in `.plex.direct` HTTPS URLs.
 - For **CORS issues** behind a reverse proxy (e.g., Nginx Proxy Manager), add `Access-Control-Allow-Origin` headers to your proxy config.
+- Kodi username/password values entered through the visual editor support special characters, including non-ASCII characters. If Kodi still fails to load, open your browser developer tools on the Home Assistant dashboard and check the Console/Network tabs for the card's request error.
 
 ---
 

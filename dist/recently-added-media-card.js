@@ -31,6 +31,16 @@ function getTheme(serverType, themeOverride) {
   return THEMES[key] || THEMES['plex'];
 }
 
+function escapeAttr(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[ch]));
+}
+
 // ─── Logo SVGs ────────────────────────────────────────────────────────────────
 
 const LOGOS = {
@@ -114,12 +124,12 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div id="plex-fields" style="display:${serverType === 'plex' ? 'contents' : 'none'}">
           <div class="field-row">
             <label>Plex Server URL</label>
-            <input type="text" id="plex_url" placeholder="http://192.168.1.100:32400" value="${cfg.plex_url || ''}">
+            <input type="text" id="plex_url" placeholder="http://192.168.1.100:32400" value="${escapeAttr(cfg.plex_url)}">
             <span class="helper">e.g. http://192.168.1.100:32400</span>
           </div>
           <div class="field-row">
             <label>Plex Token</label>
-            <input type="password" id="plex_token" value="${cfg.plex_token || ''}">
+            <input type="password" id="plex_token" value="${escapeAttr(cfg.plex_token)}">
             <span class="helper">Settings → Troubleshooting → XML URL (X-Plex-Token param)</span>
           </div>
         </div>
@@ -128,17 +138,17 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div id="kodi-fields" style="display:${serverType === 'kodi' ? 'contents' : 'none'}">
           <div class="field-row">
             <label>Kodi URL</label>
-            <input type="text" id="kodi_url" placeholder="http://192.168.1.100:8080" value="${cfg.kodi_url || ''}">
+            <input type="text" id="kodi_url" placeholder="http://192.168.1.100:8080" value="${escapeAttr(cfg.kodi_url)}">
             <span class="helper">e.g. http://192.168.1.100:8080</span>
           </div>
           <div class="grid-2">
             <div class="field-row">
               <label>Kodi Username</label>
-              <input type="text" id="kodi_username" placeholder="kodi" value="${cfg.kodi_username || ''}">
+              <input type="text" id="kodi_username" placeholder="kodi" value="${escapeAttr(cfg.kodi_username)}">
             </div>
             <div class="field-row">
               <label>Kodi Password</label>
-              <input type="password" id="kodi_password" value="${cfg.kodi_password || ''}">
+              <input type="password" id="kodi_password" value="${escapeAttr(cfg.kodi_password)}">
             </div>
           </div>
         </div>
@@ -147,16 +157,16 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div id="jellyfin-fields" style="display:${serverType === 'jellyfin' ? 'contents' : 'none'}">
           <div class="field-row">
             <label>Jellyfin URL</label>
-            <input type="text" id="jellyfin_url" placeholder="http://192.168.1.100:8096" value="${cfg.jellyfin_url || ''}">
+            <input type="text" id="jellyfin_url" placeholder="http://192.168.1.100:8096" value="${escapeAttr(cfg.jellyfin_url)}">
             <span class="helper">e.g. http://192.168.1.100:8096</span>
           </div>
           <div class="field-row">
             <label>Jellyfin API Key</label>
-            <input type="password" id="jellyfin_api_key" value="${cfg.jellyfin_api_key || ''}">
+            <input type="password" id="jellyfin_api_key" value="${escapeAttr(cfg.jellyfin_api_key)}">
           </div>
           <div class="field-row">
             <label>Jellyfin User ID</label>
-            <input type="text" id="jellyfin_user_id" placeholder="Leave blank to auto-detect" value="${cfg.jellyfin_user_id || ''}">
+            <input type="text" id="jellyfin_user_id" placeholder="Leave blank to auto-detect" value="${escapeAttr(cfg.jellyfin_user_id)}">
             <span class="helper">Optional — auto-detected if blank</span>
           </div>
         </div>
@@ -165,17 +175,17 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div id="emby-fields" style="display:${serverType === 'emby' ? 'contents' : 'none'}">
           <div class="field-row">
             <label>Emby URL</label>
-            <input type="text" id="emby_url" placeholder="http://192.168.1.100:8096" value="${cfg.emby_url || ''}">
+            <input type="text" id="emby_url" placeholder="http://192.168.1.100:8096" value="${escapeAttr(cfg.emby_url)}">
             <span class="helper">e.g. http://192.168.1.100:8096</span>
           </div>
           <div class="field-row">
             <label>Emby API Key</label>
-            <input type="password" id="emby_api_key" value="${cfg.emby_api_key || ''}">
+            <input type="password" id="emby_api_key" value="${escapeAttr(cfg.emby_api_key)}">
             <span class="helper">Emby Dashboard → Advanced → API Keys</span>
           </div>
           <div class="field-row">
             <label>Emby User ID</label>
-            <input type="text" id="emby_user_id" placeholder="Leave blank to auto-detect" value="${cfg.emby_user_id || ''}">
+            <input type="text" id="emby_user_id" placeholder="Leave blank to auto-detect" value="${escapeAttr(cfg.emby_user_id)}">
             <span class="helper">Optional — auto-detected if blank</span>
           </div>
         </div>
@@ -184,21 +194,21 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div class="grid-2">
           <div class="field-row">
             <label>Movies Count</label>
-            <input type="number" id="movies_count" min="1" max="20" value="${cfg.movies_count !== undefined ? cfg.movies_count : 5}">
+            <input type="number" id="movies_count" min="1" max="20" value="${escapeAttr(cfg.movies_count !== undefined ? cfg.movies_count : 5)}">
           </div>
           <div class="field-row">
             <label>TV Shows Count</label>
-            <input type="number" id="shows_count" min="1" max="20" value="${cfg.shows_count !== undefined ? cfg.shows_count : 5}">
+            <input type="number" id="shows_count" min="1" max="20" value="${escapeAttr(cfg.shows_count !== undefined ? cfg.shows_count : 5)}">
           </div>
         </div>
         <div class="grid-2">
           <div class="field-row">
             <label>Cycle Interval (seconds)</label>
-            <input type="number" id="cycle_interval" min="3" max="60" value="${cfg.cycle_interval !== undefined ? cfg.cycle_interval : 8}">
+            <input type="number" id="cycle_interval" min="3" max="60" value="${escapeAttr(cfg.cycle_interval !== undefined ? cfg.cycle_interval : 8)}">
           </div>
           <div class="field-row">
             <label>Card Title</label>
-            <input type="text" id="title" value="${cfg.title !== undefined ? cfg.title : 'Recently Added'}">
+            <input type="text" id="title" value="${escapeAttr(cfg.title !== undefined ? cfg.title : 'Recently Added')}">
           </div>
         </div>
 
@@ -223,7 +233,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         </div>
         <div class="field-row">
           <label>Card Height (px, when Fill Height is off)</label>
-          <input type="number" id="card_height" min="200" max="800" value="${cfg.card_height || 300}">
+          <input type="number" id="card_height" min="200" max="800" value="${escapeAttr(cfg.card_height || 300)}">
           <span class="helper">Default: 300</span>
         </div>
 
@@ -242,7 +252,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         <div class="section-title">Trailers</div>
         <div class="field-row">
           <label>TMDB API Key (for trailers)</label>
-          <input type="password" id="tmdb_api_key" value="${cfg.tmdb_api_key || ''}">
+          <input type="password" id="tmdb_api_key" value="${escapeAttr(cfg.tmdb_api_key)}">
           <span class="helper">Optional — get a free Bearer token at themoviedb.org</span>
         </div>
         <div class="field-row">
@@ -492,11 +502,22 @@ class RecentlyAddedMediaCard extends HTMLElement {
 
   // ── Kodi RPC ─────────────────────────────────────────────────────────────────
 
+  _base64Utf8(value) {
+    if (typeof TextEncoder !== 'undefined') {
+      const bytes = new TextEncoder().encode(value);
+      let binary = '';
+      bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+      return btoa(binary);
+    }
+    return btoa(unescape(encodeURIComponent(value)));
+  }
+
   _kodiHeaders() {
     const headers = { 'Content-Type': 'application/json' };
-    if (this._config.kodi_username && this._config.kodi_password) {
-      const cred = btoa(`${this._config.kodi_username}:${this._config.kodi_password}`);
-      headers['Authorization'] = `Basic ${cred}`;
+    const username = this._config.kodi_username || '';
+    const password = this._config.kodi_password || '';
+    if (username || password) {
+      headers['Authorization'] = `Basic ${this._base64Utf8(`${username}:${password}`)}`;
     }
     return headers;
   }
@@ -504,7 +525,14 @@ class RecentlyAddedMediaCard extends HTMLElement {
   async _kodiRPC(method, params = {}) {
     const url = `${(this._config.kodi_url || '').replace(/\/$/, '')}/jsonrpc`;
     const body = JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 });
-    const resp = await fetch(url, { method: 'POST', headers: this._kodiHeaders(), body });
+    let resp;
+    try {
+      resp = await fetch(url, { method: 'POST', headers: this._kodiHeaders(), body });
+    } catch (err) {
+      const detail = err && err.message ? err.message : String(err);
+      throw new Error(`Kodi request failed before an HTTP response: ${detail}. Check that this browser can reach the Kodi URL, and that CORS or mixed-content blocking is not stopping the request.`);
+    }
+    if (resp.status === 401) throw new Error('Kodi authentication failed (HTTP 401). Check the username/password, including any special characters.');
     if (!resp.ok) throw new Error(`Kodi HTTP ${resp.status}`);
     const data = await resp.json();
     if (data.error) throw new Error(`Kodi RPC error: ${data.error.message}`);
