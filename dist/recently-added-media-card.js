@@ -1,5 +1,5 @@
 /**
- * Recently Added Media Card v2.0.0
+ * Recently Added Media Card v2.0.1
  * A unified Home Assistant Lovelace card combining Plex, Kodi, Jellyfin, and Emby
  * recently-added views into one card with a server type selector.
  *
@@ -523,17 +523,44 @@ class RecentlyAddedMediaCard extends HTMLElement {
   }
 
   async _kodiRPC(method, params = {}) {
-    const url = `${(this._config.kodi_url || '').replace(/\/$/, '')}/jsonrpc`;
+    const baseUrl = (this._config.kodi_url || '').trim();
+    if (!baseUrl) {
+      throw new Error('Kodi URL is not configured. Set kodi_url in the card config.');
+    }
+    // Validate the URL has a protocol — fetch() requires an absolute URL
+    if (!/^https?:\/\//i.test(baseUrl)) {
+      throw new Error(
+        `Kodi URL must start with http:// or https://. Got: "${baseUrl}". ` +
+        'If your Kodi is on the same machine as Home Assistant, try http://IP_ADDRESS:8080.'
+      );
+    }
+    const url = `${baseUrl.replace(/\/$/, '')}/jsonrpc`;
     const body = JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 });
     let resp;
     try {
       resp = await fetch(url, { method: 'POST', headers: this._kodiHeaders(), body });
     } catch (err) {
-      const detail = err && err.message ? err.message : String(err);
-      throw new Error(`Kodi request failed before an HTTP response: ${detail}. Check that this browser can reach the Kodi URL, and that CORS or mixed-content blocking is not stopping the request.`);
+      const detail = (err && err.message ? err.message : String(err)).toLowerCase();
+      // Detect common browser-level failures and give targeted guidance
+      if (detail.includes('failed to fetch') || detail.includes('load failed') || detail.includes('networkerror')) {
+        throw new Error(
+          'Cannot reach Kodi. This is usually a browser-level block: ' +
+          'CORS (Kodi does not allow cross-origin requests by default) or ' +
+          'mixed-content (Home Assistant runs on HTTPS but Kodi uses HTTP). ' +
+          'Try opening the Kodi URL in a browser tab first. If that works, you may need to ' +
+          'enable CORS on Kodi or use an HTTPS proxy. See browser console (F12) for the exact error.'
+        );
+      }
+      throw new Error(`Kodi connection error: ${detail}`);
     }
-    if (resp.status === 401) throw new Error('Kodi authentication failed (HTTP 401). Check the username/password, including any special characters.');
-    if (!resp.ok) throw new Error(`Kodi HTTP ${resp.status}`);
+    if (resp.status === 401) {
+      throw new Error(
+        'Kodi authentication failed (HTTP 401). Check the username and password. ' +
+        'If your password contains special characters such as @ # : / ? &, ' +
+        'make sure they are entered correctly in the card config.'
+      );
+    }
+    if (!resp.ok) throw new Error(`Kodi HTTP error ${resp.status}`);
     const data = await resp.json();
     if (data.error) throw new Error(`Kodi RPC error: ${data.error.message}`);
     return data.result;
