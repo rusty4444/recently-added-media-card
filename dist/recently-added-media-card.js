@@ -503,12 +503,17 @@ class RecentlyAddedMediaCard extends HTMLElement {
   // ── Kodi RPC ─────────────────────────────────────────────────────────────────
 
   _base64Utf8(value) {
+    // Encode a Unicode string to base64 using UTF-8 bytes.
+    // TextEncoder is available in all modern browsers (Chrome 38+, FF 19+, Edge 79+).
     if (typeof TextEncoder !== 'undefined') {
       const bytes = new TextEncoder().encode(value);
       let binary = '';
       bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
       return btoa(binary);
     }
+    // Fallback for very old browsers: encodeURIComponent escapes non-ASCII
+    // as %XX sequences, then unescape converts them back to Latin-1 bytes
+    // that btoa can encode. This correctly handles all Unicode characters.
     return btoa(unescape(encodeURIComponent(value)));
   }
 
@@ -547,8 +552,10 @@ class RecentlyAddedMediaCard extends HTMLElement {
           'Cannot reach Kodi. This is usually a browser-level block: ' +
           'CORS (Kodi does not allow cross-origin requests by default) or ' +
           'mixed-content (Home Assistant runs on HTTPS but Kodi uses HTTP). ' +
-          'Try opening the Kodi URL in a browser tab first. If that works, you may need to ' +
-          'enable CORS on Kodi or use an HTTPS proxy. See browser console (F12) for the exact error.'
+          'To fix CORS, add this to Kodi\'s advancedsettings.xml: ' +
+          '<cors><allowedorigins>*</allowedorigins></cors> ' +
+          'or use a specific origin like http://homeassistant.local:8123. ' +
+          'See browser console (F12) for the exact error.'
         );
       }
       throw new Error(`Kodi connection error: ${detail}`);
