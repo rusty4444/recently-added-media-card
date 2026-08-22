@@ -239,13 +239,13 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
 
         <div class="toggle-row">
           <span>Mobile Scaling (for phone screens)</span>
-          <input type="checkbox" id="mobile_mode" ${cfg.mobile_mode ? 'checked' : ''}>
+          <input type="checkbox" id="mobile_mode" ${cfg.mobile_mode !== false ? 'checked' : ''}>
         </div>
         <span class="helper">When enabled, scales down the layout on narrow screens.</span>
 
         <div class="toggle-row">
           <span>Poster Shimmer Animation</span>
-          <input type="checkbox" id="show_shimmer" ${cfg.show_shimmer ? 'checked' : ''}>
+          <input type="checkbox" id="show_shimmer" ${cfg.show_shimmer !== false ? 'checked' : ''}>
         </div>
         <span class="helper">Adds a glossy sweep animation across poster art. Off by default to avoid GPU flash on tablets.</span>
 
@@ -313,6 +313,22 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
         this._fireChange('fill_height', fillEl.checked);
       });
     }
+
+    // mobile_mode checkbox
+    const mobileModeEl = root.getElementById('mobile_mode');
+    if (mobileModeEl) {
+      mobileModeEl.addEventListener('change', () => {
+        this._fireChange('mobile_mode', mobileModeEl.checked);
+      });
+    }
+
+    // show_shimmer checkbox
+    const shimmerEl = root.getElementById('show_shimmer');
+    if (shimmerEl) {
+      shimmerEl.addEventListener('change', () => {
+        this._fireChange('show_shimmer', shimmerEl.checked);
+      });
+    }
   }
 
   _fireChange(key, value) {
@@ -377,6 +393,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
       show_shimmer: config.show_shimmer || false,
+      mobile_mode: config.mobile_mode || false,
       ...config,
     };
 
@@ -428,6 +445,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       theme: 'auto',
       fill_height: true,
       show_shimmer: false,
+      mobile_mode: false,
     };
   }
 
