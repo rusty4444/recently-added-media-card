@@ -202,9 +202,12 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
           </div>
         </div>
         <div class="grid-2">
-          <div class="field-row">
-            <label>Cycle Interval (seconds)</label>
-            <input type="number" id="cycle_interval" min="3" max="60" value="${escapeAttr(cfg.cycle_interval !== undefined ? cfg.cycle_interval : 8)}">
+          <div>
+            <div class="field-row">
+              <label>Cycle Interval (seconds)</label>
+              <input type="number" id="cycle_interval" min="0" max="60" value="${escapeAttr(cfg.cycle_interval !== undefined ? cfg.cycle_interval : 8)}">
+            </div>
+            <span class="helper">Set to 0 to disable cycling.</span>
           </div>
           <div class="field-row">
             <label>Card Title</label>
@@ -373,7 +376,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       server_type: serverType,
       movies_count: config.movies_count || 5,
       shows_count: config.shows_count || 5,
-      cycle_interval: config.cycle_interval || 8,
+      cycle_interval: config.cycle_interval !== undefined ? config.cycle_interval : 8,
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
       show_shimmer: config.show_shimmer || false,
@@ -1059,7 +1062,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
     if (this._cycleTimer) clearInterval(this._cycleTimer);
     if (this._items.length <= 1) return;
 
-    this._cycleTimer = setInterval(() => {
+    this._cycleTimer = this._config.cycle_interval === 0 ? null : setInterval(() => {
       if (this._trailerActive) return; // Pause cycling while trailer is playing
       this._currentIndex = (this._currentIndex + 1) % this._items.length;
       this._updateDisplay();
