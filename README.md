@@ -280,8 +280,9 @@ The standalone cards will continue to work but won't receive new features.
 
 ---
 
-## Credits
-- Built by Sam Russell - AI Used in development
+## Credits and Thanks
+- Built by Sam Russell — AI used in development
+- Thanks to [Bart Nagel (@tremby)](https://github.com/tremby) for reporting and contributing fixes for the visual editor checkbox settings ([#14](https://github.com/rusty4444/recently-added-media-card/pull/14)) and disabling carousel auto-advance ([#15](https://github.com/rusty4444/recently-added-media-card/pull/15))
 - YouTube embed fix based on the approach from [loryanstrant/ha-youtubevideocard](https://github.com/loryanstrant/ha-youtubevideocard) — YouTube IFrame API for Home Assistant
 - Trailer data from [The Movie Database (TMDB)](https://www.themoviedb.org/)
 - Built for the Home Assistant community
