@@ -91,6 +91,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
     const cfg = this._config;
     const serverType = cfg.server_type || 'plex';
     const theme = cfg.theme || 'auto';
+    const sortOrder = cfg.sort_order || 'interleaved';
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -201,6 +202,14 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
             <input type="number" id="shows_count" min="1" max="20" value="${escapeAttr(cfg.shows_count !== undefined ? cfg.shows_count : 5)}">
           </div>
         </div>
+        <div class="field-row">
+          <label>Item Order</label>
+          <select id="sort_order">
+            <option value="interleaved" ${sortOrder === 'interleaved' ? 'selected' : ''}>Alternate movies and TV shows</option>
+            <option value="recent" ${sortOrder === 'recent' ? 'selected' : ''}>Newest added first</option>
+          </select>
+          <span class="helper">Newest first sorts movies and TV shows together by their added date.</span>
+        </div>
         <div class="grid-2">
           <div class="field-row">
             <label>Cycle Interval (seconds)</label>
@@ -293,7 +302,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
       'kodi_url', 'kodi_username', 'kodi_password',
       'jellyfin_url', 'jellyfin_api_key', 'jellyfin_user_id',
       'emby_url', 'emby_api_key', 'emby_user_id',
-      'movies_count', 'shows_count', 'cycle_interval', 'title',
+      'movies_count', 'shows_count', 'sort_order', 'cycle_interval', 'title',
       'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
     ];
 
@@ -385,6 +394,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       server_type: serverType,
       movies_count: config.movies_count || 5,
       shows_count: config.shows_count || 5,
+      sort_order: config.sort_order || 'interleaved',
       cycle_interval: config.cycle_interval !== undefined ? config.cycle_interval : 8,
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
@@ -435,6 +445,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       plex_token: 'YOUR_PLEX_TOKEN',
       movies_count: 5,
       shows_count: 5,
+      sort_order: 'interleaved',
       cycle_interval: 8,
       title: 'Recently Added',
       theme: 'auto',
@@ -1056,6 +1067,12 @@ class RecentlyAddedMediaCard extends HTMLElement {
   // ── Interleave utility ────────────────────────────────────────────────────────
 
   _interleave(movies, tvShows) {
+    if (this._config.sort_order === 'recent') {
+      return [...movies, ...tvShows].sort(
+        (a, b) => (Number(b.addedAt) || 0) - (Number(a.addedAt) || 0)
+      );
+    }
+
     const result = [];
     const maxLen = Math.max(movies.length, tvShows.length);
     for (let i = 0; i < maxLen; i++) {
