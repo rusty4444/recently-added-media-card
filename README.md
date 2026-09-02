@@ -156,6 +156,7 @@ tmdb_api_key: YOUR_TMDB_READ_ACCESS_TOKEN
 | `emby_user_id` | string | — | Emby user ID |
 | `movies_count` | number | `5` | Number of recently added movies to display |
 | `shows_count` | number | `5` | Number of recently added TV shows to display |
+| `sort_order` | string | `"interleave"` | How movies and shows are combined: `interleave` (alternate movies/shows) or `added_at` (merge both lists and sort strictly by most recently added) |
 || `cycle_interval` | number | `8` | Seconds between cycling to the next item |
 || `title` | string | `"Recently Added"` | Header text (set to empty string to hide) |
 || `theme` | string | `"auto"` | Colour theme: `auto`, `plex`, `kodi`, `jellyfin`, `emby`, `dark`, `midnight`, `sunset`, `forest` |

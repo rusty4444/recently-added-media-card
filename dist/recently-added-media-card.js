@@ -208,6 +208,14 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
             <span class="helper">Set to 0 to disable auto-advance.</span>
           </div>
           <div class="field-row">
+            <label>Sort Order</label>
+            <select id="sort_order">
+              <option value="interleave" ${(cfg.sort_order || 'interleave') === 'interleave' ? 'selected' : ''}>Interleave movies and shows</option>
+              <option value="added_at" ${cfg.sort_order === 'added_at' ? 'selected' : ''}>Strictly by date added</option>
+            </select>
+            <span class="helper">Default interleaves each list; "date added" merges movies and shows into a single most-recently-added order.</span>
+          </div>
+          <div class="field-row">
             <label>Card Title</label>
             <input type="text" id="title" value="${escapeAttr(cfg.title !== undefined ? cfg.title : 'Recently Added')}">
           </div>
@@ -294,7 +302,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
       'jellyfin_url', 'jellyfin_api_key', 'jellyfin_user_id',
       'emby_url', 'emby_api_key', 'emby_user_id',
       'movies_count', 'shows_count', 'cycle_interval', 'title',
-      'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
+      'sort_order', 'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
     ];
 
     fields.forEach(id => {
@@ -386,6 +394,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       movies_count: config.movies_count || 5,
       shows_count: config.shows_count || 5,
       cycle_interval: config.cycle_interval !== undefined ? config.cycle_interval : 8,
+      sort_order: config.sort_order || 'interleave',
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
       show_shimmer: config.show_shimmer || false,
@@ -436,6 +445,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       movies_count: 5,
       shows_count: 5,
       cycle_interval: 8,
+      sort_order: 'interleave',
       title: 'Recently Added',
       theme: 'auto',
       fill_height: true,
@@ -1053,9 +1063,15 @@ class RecentlyAddedMediaCard extends HTMLElement {
     return this._interleave(movieItems, tvDisplayItems);
   }
 
-  // ── Interleave utility ────────────────────────────────────────────────────────
+  // ── Combine utility ──────────────────────────────────────────────────────────
 
   _interleave(movies, tvShows) {
+    const sortOrder = this._config.sort_order || 'interleave';
+    if (sortOrder === 'added_at') {
+      const combined = [...movies, ...tvShows];
+      combined.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+      return combined;
+    }
     const result = [];
     const maxLen = Math.max(movies.length, tvShows.length);
     for (let i = 0; i < maxLen; i++) {
