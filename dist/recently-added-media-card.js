@@ -201,6 +201,14 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
             <input type="number" id="shows_count" min="1" max="20" value="${escapeAttr(cfg.shows_count !== undefined ? cfg.shows_count : 5)}">
           </div>
         </div>
+        <div class="field-row">
+          <label>Sort Order</label>
+          <select id="sort_order">
+            <option value="interleaved" ${(cfg.sort_order || 'interleaved') === 'interleaved' ? 'selected' : ''}>Interleave movies and TV shows (default)</option>
+            <option value="by_added_date" ${cfg.sort_order === 'by_added_date' ? 'selected' : ''}>By date added (newest first)</option>
+          </select>
+          <span class="helper">Interleaved alternates movie and TV show cards. By date added lists everything in strict newest-first order, regardless of type.</span>
+        </div>
         <div class="grid-2">
           <div class="field-row">
             <label>Cycle Interval (seconds)</label>
@@ -294,7 +302,7 @@ class RecentlyAddedMediaCardEditor extends HTMLElement {
       'jellyfin_url', 'jellyfin_api_key', 'jellyfin_user_id',
       'emby_url', 'emby_api_key', 'emby_user_id',
       'movies_count', 'shows_count', 'cycle_interval', 'title',
-      'theme', 'card_height', 'tmdb_api_key', 'trailer_mode',
+      'theme', 'card_height', 'tmdb_api_key', 'trailer_mode', 'sort_order',
     ];
 
     fields.forEach(id => {
@@ -389,6 +397,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       title: config.title !== undefined ? config.title : 'Recently Added',
       theme: config.theme || 'auto',
       show_shimmer: config.show_shimmer || false,
+      sort_order: config.sort_order || 'interleaved',
       ...config,
     };
 
@@ -440,6 +449,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       theme: 'auto',
       fill_height: true,
       show_shimmer: false,
+      sort_order: 'interleaved',
     };
   }
 
@@ -1061,6 +1071,11 @@ class RecentlyAddedMediaCard extends HTMLElement {
     for (let i = 0; i < maxLen; i++) {
       if (i < movies.length) result.push(movies[i]);
       if (i < tvShows.length) result.push(tvShows[i]);
+    }
+    // Optional strict ordering: list everything by date added (newest first),
+    // ignoring media type. Default behaviour keeps the interleaved order.
+    if (this._config.sort_order === 'by_added_date') {
+      result.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
     }
     return result;
   }
