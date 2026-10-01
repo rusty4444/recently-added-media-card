@@ -596,7 +596,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       this._userId = this._config.jellyfin_user_id;
       return this._userId;
     }
-    const resp = await fetch(`${base}/Users?api_key=${key}`, { headers: { Accept: 'application/json' } });
+    const resp = await fetch(`${base}/Users`, { headers: { Authorization: `MediaBrowser Token="${key}"`, Accept: 'application/json' } });
     if (!resp.ok) throw new Error(`Failed to fetch Jellyfin users: HTTP ${resp.status}`);
     const users = await resp.json();
     if (!Array.isArray(users) || users.length === 0) throw new Error('No Jellyfin users found');
@@ -847,7 +847,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
     const showsCount = this._config.shows_count;
     const userId = await this._resolveJellyfinUserId();
 
-    const headers = { 'X-MediaBrowser-Token': key, Accept: 'application/json' };
+    const headers = { Authorization: `MediaBrowser Token="${key}"`, Accept: 'application/json' };
 
     const moviesResp = await fetch(
       `${base}/Users/${userId}/Items/Latest` +
@@ -1636,7 +1636,7 @@ class RecentlyAddedMediaCard extends HTMLElement {
       const key = this._config.jellyfin_api_key;
       const userId = await this._resolveJellyfinUserId();
 
-      const sResp = await fetch(`${base}/Users/${userId}/Items/${seriesId}?Fields=ProviderIds&api_key=${key}`, { headers: { Accept: 'application/json' } });
+      const sResp = await fetch(`${base}/Users/${userId}/Items/${seriesId}?Fields=ProviderIds`, { headers: { Authorization: `MediaBrowser Token="${key}"`, Accept: 'application/json' } });
       if (!sResp.ok) throw new Error(`Jellyfin series metadata HTTP ${sResp.status}`);
       const sData = await sResp.json();
       const tmdbId = (sData.ProviderIds?.Tmdb || sData.ProviderIds?.tmdb || '').trim();
