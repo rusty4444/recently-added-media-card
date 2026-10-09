@@ -30,6 +30,7 @@ A cinematic Home Assistant card that displays recently added movies and TV shows
 - **Swipe navigation** — swipe left/right on touch devices or click-and-drag on desktop to move through the carousel
 - **Cinematic design** — blurred background art, poster on left, info on right, smooth crossfade transitions
 - **Auto-cycling carousel** — rotates through recently added items with colour-coded dots (movie/TV)
+- **Configurable item order** — alternate movies and TV shows, or sort all items by newest added
 - **Synopsis and metadata** — title, year, genres, content rating, star rating, time since added, and full synopsis
 - **Visual editor** — configure everything from the HA UI with dynamic fields per server type
 - **Fill height / fixed height** — adapts to any HA layout mode
@@ -86,6 +87,7 @@ plex_url: http://YOUR_PLEX_IP:32400
 plex_token: YOUR_PLEX_TOKEN
 movies_count: 5
 shows_count: 5
+sort_order: recent
 cycle_interval: 8
 title: Recently Added
 tmdb_api_key: YOUR_TMDB_READ_ACCESS_TOKEN  # Optional: enables trailers
@@ -156,6 +158,7 @@ tmdb_api_key: YOUR_TMDB_READ_ACCESS_TOKEN
 | `emby_user_id` | string | — | Emby user ID |
 | `movies_count` | number | `5` | Number of recently added movies to display |
 | `shows_count` | number | `5` | Number of recently added TV shows to display |
+| `sort_order` | string | `interleaved` | `interleaved` alternates movies and TV shows; `recent` sorts all items together by newest added |
 || `cycle_interval` | number | `8` | Seconds between cycling to the next item |
 || `title` | string | `"Recently Added"` | Header text (set to empty string to hide) |
 || `theme` | string | `"auto"` | Colour theme: `auto`, `plex`, `kodi`, `jellyfin`, `emby`, `dark`, `midnight`, `sunset`, `forest` |
@@ -225,7 +228,7 @@ The card connects directly to your media server's API from the browser and fetch
 - **Jellyfin**: Calls the `/Users/{userId}/Items/Latest` endpoint filtered by movie and series types
 - **Emby**: Same approach as Jellyfin with Emby's API endpoints
 
-Items are interleaved (movie, show, movie, show...) and displayed in a cycling carousel with smooth crossfade transitions.
+Items are interleaved by default (movie, show, movie, show...). Set `sort_order: recent` to combine movies and TV shows into strict newest-added order. Items are displayed in a cycling carousel with smooth crossfade transitions.
 
 ### Important Notes
 
